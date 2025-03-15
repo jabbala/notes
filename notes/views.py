@@ -1,16 +1,25 @@
-from django.shortcuts import render
-from django.http import Http404
 
+from django.views.generic import CreateView, ListView, DetailView
+
+from .forms import NotesForm
 from .models import Notes
 
+class NotesCreateView(CreateView):
+    model = Notes
+    form_class = NotesForm
+    success_url = '/smart/notes'
 
-def list(request):
-    all_notes = Notes.objects.all()
-    return render(request, 'notes/notes_list.html', {'notes': all_notes})
+class NotesListView(ListView):
+    template_name = 'notes/notes_list.html'
+    model = Notes
+    context_object_name = 'notes'
 
-def detail(request, note_id):
-    try:
-        note = Notes.objects.get(id=note_id)
-    except Notes.DoesNotExist:
-        raise Http404
-    return render(request, 'notes/note_detail.html', {'note': note})
+class PopularNotesListView(ListView):
+    template_name = 'notes/notes_list.html'
+    model = Notes
+    context_object_name = 'notes'
+    queryset = Notes.objects.filter(likes__gte=1)
+
+class NotesDetailView(DetailView):
+    model = Notes
+    context_object_name = 'note'
