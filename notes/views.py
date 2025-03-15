@@ -1,5 +1,5 @@
 
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
 from .forms import NotesForm
 from .models import Notes
@@ -23,3 +23,17 @@ class PopularNotesListView(ListView):
 class NotesDetailView(DetailView):
     model = Notes
     context_object_name = 'note'
+
+
+class NotesUpdateView(UpdateView):
+    model = Notes
+    form_class = NotesForm
+    success_url = '/smart/notes'
+
+class NotesDeleteView(DeleteView):
+    model = Notes
+    success_url = '/smart/notes'
+    template_name = 'notes/notes_delete.html'
+
+
+
