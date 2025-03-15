@@ -44,23 +44,27 @@ class NotesListView(LoginRequiredMixin, ListView):
         return self.request.user.notes.all()
 
 
-class PopularNotesListView(ListView):
+class PopularNotesListView(LoginRequiredMixin, ListView):
     template_name = 'notes/notes_list.html'
     model = Notes
     context_object_name = 'notes'
     queryset = Notes.objects.filter(likes__gte=1)
 
-class NotesDetailView(DetailView):
+class NotesDetailView(LoginRequiredMixin, DetailView):
     model = Notes
     context_object_name = 'note'
 
+class NotesPublicDetailView(DetailView):
+    model = Notes
+    context_object_name = 'note'
+    queryset = Notes.objects.filter(is_public=True)
 
-class NotesUpdateView(UpdateView):
+class NotesUpdateView(LoginRequiredMixin, UpdateView):
     model = Notes
     form_class = NotesForm
     success_url = '/smart/notes'
 
-class NotesDeleteView(DeleteView):
+class NotesDeleteView(LoginRequiredMixin, DeleteView):
     model = Notes
     success_url = '/smart/notes'
     template_name = 'notes/notes_delete.html'
